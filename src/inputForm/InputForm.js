@@ -312,7 +312,9 @@ const InputForm = () => {
                             setIncrement(Math.floor(capacity/val));
                         }
                     }
-                />
+                >
+					{spanPoints}
+				</InputNumber>
 			</Form.Item>
 
 			<Form.Item
