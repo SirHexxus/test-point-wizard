@@ -193,7 +193,10 @@ const InputForm = () => {
 
 	const onReset = () => {
         form.resetFields();
-        setOutput({status: false});
+		setOutput({status: false});
+		setCapacity(0);
+		setSpanPoints(1);
+		setIncrement(0);
 	};
 
 	return (
