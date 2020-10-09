@@ -24,7 +24,7 @@ For creating test points for scale calibration, based on NIST Handbook 44, Table
 > The Increment that the Scale device reads by. Usually ends in a 1, 2, or 5.
 
 > ### Capacity
-> The maximum amount of weight that the weighing element (AKA Indicator) will display.
+> The maximum amount of weight that the indicating element (AKA Indicator) will display.
 
 > ### Units
 > Units of measure with which the device is to be calibrated.
