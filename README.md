@@ -16,6 +16,11 @@ For creating test points for scale calibration, based on NIST Handbook 44, Table
 4. See your Testpoints generated below the form, along with some identifying information about your device.
     - If you would like to see more information, use the Browser Console (Right click > Inspect > select Console) to see more information.
 
+If you want to run this program locally from source code, please do the following:
+1. Download and install [node.js LTS version](https://nodejs.org/en/download/)
+2. Start up a terminal program, navigate to the root folder of this project, and run `npm install`
+3. Once the application completes installation, you should be able to start it by running `npm start` and opening your browser to [localhost at port 3000](http://localhost:3000)
+
 [ [top](#test-point-wizard) ]
 ***
 

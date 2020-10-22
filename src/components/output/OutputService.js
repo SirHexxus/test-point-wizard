@@ -94,11 +94,19 @@ const generateTestPoints = (
 
 	//	if the cornerTest boolean value is true, create corner tolerances at 1/4 of capacity
 	if (cornerTest) {
+		const cornerTestPoint =
+			buildIncrement * spanPoints < capacity / 4
+				? buildIncrement * spanPoints
+				: capacity / 4;
 		for (let i = 1; i <= 4; i++) {
 			testPointArray.push({
 				order: `corner ${i}`,
-				testpoint: capacity / 4,
-				tolerance: toleranceChart(deviceClass, capacity / 4, gradSize),
+				testpoint: cornerTestPoint,
+				tolerance: toleranceChart(
+					deviceClass,
+					cornerTestPoint,
+					gradSize
+				),
 			});
 		}
 	}

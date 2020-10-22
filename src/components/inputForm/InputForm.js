@@ -47,6 +47,10 @@ const InputForm = () => {
 	const [form] = Form.useForm();
 
 	const onFinish = (values) => {
+		values.buildIncrement = values.buildIncrement || input.increment;
+		values.gradSize = parseFloat(values.gradSize);
+		values.spanPoints = parseInt(values.spanPoints);
+		values.capacity = parseInt(values.capacity);
 		setOutput(values);
 		/* console.log(
 			JSON.stringify(
@@ -77,9 +81,10 @@ const InputForm = () => {
 		setInput({
 			capacity: 0,
 			spanPoints: 1,
-			increment: 1,
+			increment: null,
 			sectionTest: false,
 		});
+		console.clear();
 	};
 
 	return (
@@ -87,7 +92,7 @@ const InputForm = () => {
 			<Form
 				{...layout}
 				form={form}
-				name="basic"
+				name="input"
 				initialValues={{
 					cornerTest: false,
 					sectionTest: false,
@@ -105,6 +110,18 @@ const InputForm = () => {
 								required: true,
 								message: 'Please input the Graduation Size!',
 							},
+							// {
+							// 	type: 'number',
+							// 	message: 'Please enter a number.',
+							// },
+							{
+								validator: (_, value) => {
+									return 0.000000001 <= value && value <= 100
+										? Promise.resolve()
+										: Promise.reject(
+												'Out of Range (Must be between 0.000000001 and 100)'
+										  )},
+							}
 						]}
 					>
 						<Input />
@@ -120,19 +137,25 @@ const InputForm = () => {
 								required: true,
 								message: "Please input the Scale's Capacity!",
 							},
+							{
+								validator: (_, value) => {
+									return 0 < value && value <= 1_000_000
+										? Promise.resolve()
+										: Promise.reject(
+												'Out of Range (Must be between 0 and 1,000,000)'
+										  )},
+							}
 						]}
 					>
 						<Input
 							default={input.capacity}
-							onChange={(val) =>
+							onChange={e => {
 								setInput({
 									...input,
-									capacity: val,
-									increment: Math.floor(
-										val / input.spanPoints
-									),
+									capacity: parseInt(e.target.value),
+									increment: Math.floor(e.target.value / input.spanPoints )
 								})
-							}
+							}}
 						/>
 					</Form.Item>
 				</Tooltip>
@@ -201,36 +224,41 @@ const InputForm = () => {
 							min={1}
 							max={10}
 							defaultValue={input.spanPoints}
-							onChange={(val) =>
+							onChange={(e) =>{
+								console.log(e)
 								setInput({
 									...input,
-									spanPoints: val,
-									increment: Math.floor(input.capacity / val),
+									spanPoints: e,
+									increment: Math.floor(input.capacity / e),
 								})
-							}
+							}}
 						>
 							{/* {input.spanPoints} */}
 						</InputNumber>
 					</Form.Item>
 				</Tooltip>
 
-				<Tooltip title="The amount of increase between each point of the Build Test.">
+				<Tooltip title="The amount of increase between each point of the Build Test. An Increment will be calculated if not entered.">
 					<Form.Item
 						label="Build Point Increments"
 						name="buildIncrement"
+						onChange={(e) =>
+							setInput({ ...input, increment: parseInt(e.target.value) })
+						}
 						rules={[
 							{
-								required: true,
-								message: 'Please input a build Increment!',
-							},
+								validator: (_, value) => {
+									const cap = input.capacity
+									console.log(value)
+									return (0 < value && value <= cap) || input.increment
+										? Promise.resolve()
+										: Promise.reject(
+												'Out of Range (Must be more than zero, and less than the capacity)'
+										  )},
+							}
 						]}
 					>
-						<Input
-							defaultValue={input.increment}
-							onChange={(val) =>
-								setInput({ ...input, increment: val })
-							}
-						/>
+						<Input value={input.increment}/>
 					</Form.Item>
 				</Tooltip>
 
@@ -251,9 +279,8 @@ const InputForm = () => {
 						<Switch
 							checkedChildren="Yes"
 							unCheckedChildren="No"
-							checked={input.sectionTest}
-							onChange={(checked) =>
-								setInput({ ...input, sectionTest: checked })
+							onChange={(e) =>
+								setInput({ ...input, sectionTest: e })
 							}
 						/>
 					</Tooltip>
@@ -285,15 +312,15 @@ const InputForm = () => {
 				</Form.Item>
 
 				<Form.Item {...tailLayout}>
-					<Tooltip title='Submit Form to Generate Test Points'>
-					<Button type="primary" htmlType="submit">
-						Submit
-					</Button>
+					<Tooltip title="Submit Form to Generate Test Points">
+						<Button type="primary" htmlType="submit">
+							Submit
+						</Button>
 					</Tooltip>
-					<Tooltip title='Reset Form to start over'>
-					<Button htmlType="button" onClick={onReset}>
-						Reset
-					</Button>
+					<Tooltip title="Reset Form to start over">
+						<Button htmlType="button" onClick={onReset}>
+							Reset
+						</Button>
 					</Tooltip>
 				</Form.Item>
 			</Form>
